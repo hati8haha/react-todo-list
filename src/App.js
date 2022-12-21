@@ -1,28 +1,33 @@
-import { useState, useRef, useEffect, createContext } from "react"
+import { useState, useRef, useEffect, createContext } from 'react'
 
-import TodoHeader from "./components/TodoHeader"
-import TodoCard from "./components/TodoCard"
-import TodoFilter from "./components/TodoFilter"
-import styled from "styled-components"
-
+import TodoHeader from './components/TodoHeader'
+import TodoCard from './components/TodoCard'
+import TodoFilter from './components/TodoFilter'
+import styled from 'styled-components'
+import './index.css'
+import Wave from './components/Wave'
 export const TodoWrapper = styled.div`
-  margin: 0 auto;
+  position: relative;
+  background: linear-gradient(45deg, white, transparent);
+  backdrop-filter: blur(2px) drop-shadow(4px 4px 10px blue) opacity(20%);
+  margin: 2rem auto;
   border-radius: 8px;
-  border: 1px #ccc solid;
-  width: 500px;
+  border: none;
+  width: fit-content;
+  max-width: 1600px;
 `
 export const FilterContext = createContext()
 
 function writeTodosToLocalStorage(todos) {
-  window.localStorage.setItem("todos", JSON.stringify(todos))
+  window.localStorage.setItem('todos', JSON.stringify(todos))
 }
 
 function App() {
   const id = useRef(1)
-  const [inputContent, setInputContent] = useState("")
+  const [inputContent, setInputContent] = useState('')
   const [todos, setTodos] = useState(() => {
-    let todoData = window.localStorage.getItem("todos") || ""
-    if (todoData && todoData !== "[]") {
+    let todoData = window.localStorage.getItem('todos') || ''
+    if (todoData && todoData !== '[]') {
       todoData = JSON.parse(todoData)
       id.current = todoData[0].id + 1
     } else {
@@ -30,7 +35,7 @@ function App() {
     }
     return todoData
   })
-  const [filter, setFilter] = useState("all")
+  const [filter, setFilter] = useState('all')
   const [onUpdate, setOnUpdate] = useState({ update: false, id: null })
 
   const handleSetInputContent = (content) => {
@@ -42,9 +47,9 @@ function App() {
         id: id.current,
         content: inputContent,
         isDone: false,
-        show: true,
+        show: true
       },
-      ...todos,
+      ...todos
     ])
     id.current++
   }
@@ -54,7 +59,7 @@ function App() {
         if (todo.id !== id) return todo
         return {
           ...todo,
-          isDone: !todo.isDone,
+          isDone: !todo.isDone
         }
       })
     )
@@ -79,7 +84,7 @@ function App() {
         if (todo.id !== id) return todo
         return {
           ...todo,
-          content: inputContent,
+          content: inputContent
         }
       })
     )
@@ -97,9 +102,9 @@ function App() {
       />
     )
     switch (filter) {
-      case "completed":
+      case 'completed':
         return todo.isDone && todoCardJsx
-      case "uncompleted":
+      case 'uncompleted':
         return !todo.isDone && todoCardJsx
       default:
         return todoCardJsx
@@ -115,23 +120,26 @@ function App() {
   }, [todos])
 
   return (
-    <TodoWrapper>
-      <TodoHeader
-        inputContent={inputContent}
-        todos={todos}
-        onInputContentChange={handleSetInputContent}
-        onTodosChange={handleSetTodos}
-        onUpdate={onUpdate}
-        onHandleUpdate={handleUpdate}
-      />
-      <FilterContext.Provider value={filter}>
-        <TodoFilter
-          onFilterChange={handleTodoFilter}
-          onClearTodo={handleClearTodo}
+    <>
+      <Wave />
+      <TodoWrapper>
+        <TodoHeader
+          inputContent={inputContent}
+          todos={todos}
+          onInputContentChange={handleSetInputContent}
+          onTodosChange={handleSetTodos}
+          onUpdate={onUpdate}
+          onHandleUpdate={handleUpdate}
         />
-      </FilterContext.Provider>
-      {todos.map(todoFilter)}
-    </TodoWrapper>
+        <FilterContext.Provider value={filter}>
+          <TodoFilter
+            onFilterChange={handleTodoFilter}
+            onClearTodo={handleClearTodo}
+          />
+        </FilterContext.Provider>
+        {todos.map(todoFilter)}
+      </TodoWrapper>
+    </>
   )
 }
 

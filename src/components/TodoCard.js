@@ -1,13 +1,22 @@
-import styled from "styled-components"
-import { TodoBtn } from "../constants/style"
+import styled from 'styled-components'
+import { TodoBtn } from '../constants/style'
 
 const TodoCardWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.4rem 2rem;
+  background: transparent;
+  border-radius: 4px;
   height: 2rem;
-  border-top: 1px solid #ccc;
+  transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  backdrop-filter: blur(4px) opacity(0%);
+
+  &:hover {
+    transform: scale(1.1);
+    background: #ffffffd3;
+    backdrop-filter: blur(4px) opacity(1);
+  }
 `
 const TodoItem = styled.div`
   ${(props) =>
@@ -35,7 +44,7 @@ export default function TodoCard({
   todo,
   onChangeStatus,
   onDeleteTodo,
-  onUpdateTodo,
+  onUpdateTodo
 }) {
   return (
     <TodoCardWrapper>
@@ -48,9 +57,9 @@ export default function TodoCard({
         {todo.content}
       </TodoItem>
       <TodoAction>
-        <TodoStatus>{todo.isDone ? "已完成" : "未完成"}</TodoStatus>
+        <TodoStatus>{todo.isDone ? '已完成' : '未完成'}</TodoStatus>
         <TodoBtn
-          bgColor="darkslategray"
+          bgColor='darkslategray'
           onClick={() => {
             onUpdateTodo(todo.id)
           }}
@@ -58,7 +67,7 @@ export default function TodoCard({
           編輯
         </TodoBtn>
         <TodoBtn
-          bgColor="red"
+          bgColor='red'
           onClick={() => {
             onDeleteTodo(todo.id)
           }}
